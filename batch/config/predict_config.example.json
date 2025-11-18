@@ -1,0 +1,7 @@
+{
+  "predict_date": "20250701",
+  "horizon_days": 30,
+  "item_codes": "2.01",
+  "neg_mult": 3,
+  "seed": 42
+}

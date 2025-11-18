@@ -19,45 +19,53 @@ ED-Alpha is a Python 3.12.11 pipeline that ingests SEC filings and GDELT news, l
   <img src="docs/images/platform.png" alt="Platform architecture" width="240" />
 </p>
 
+## Docker quickstart
+
+Run the full stack with Docker Compose v2 (`docker compose …`): Postgres + backend (FastAPI) + frontend (Next.js) + batch runner.
+
+### 1) Prepare environment variables (.env)
+```bash
+cp .env.sample .env
+# Edit as needed
+USER_EMAIL=you@example.com
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=postgres
+PGUSER=postgres
+PGPASSWORD=postgres
+PGSSL=disable
+OPENROUTER_API_KEY=xxx        # only if you need it
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
+
+### 2) Build and start
+The first start applies `db/*.sql` automatically when the DB volume is empty.
+```bash
+docker compose build --no-cache
+docker compose up -d db                 # wait until healthy
+docker compose up -d backend frontend   # ports: backend 8000 / frontend 3000
+```
+- Backend docs: http://localhost:8000/docs  
+- Frontend: http://localhost:3000
+
+### 3) Run batch jobs
+Keep the batch container up and use a shell for multiple scripts:
+```bash
+docker compose --profile batch up -d batch
+docker compose exec -it batch sh
+cd /app/src
+python fetch_recent_filings.py
+python fetch_gdelt_master_times.py
+# run other scripts as needed, then exit
+```
+One-shot example:
+```bash
+docker compose run --rm batch python src/fetch_recent_filings.py
+```
+
 ## Batch Pipeline
 
-### Prerequisites
-
-- Python 3.12.11
-- PostgreSQL with INSERT/UPDATE privileges
-- `psql` (or another SQL client) to apply schemas
-
-### Setup
-
-1) Create and activate a virtual environment (optional).
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-```
-2) Install dependencies.
-```bash
-pip install -r requirements.txt
-```
-3) Prepare environment variables.
-```bash
-cp .env.example .env
-```
-- `USER_EMAIL` is required for the SEC User-Agent header (`Ed-Alpha/0.1 (<your email>)`).
-- `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD` should point to your PostgreSQL instance.
-- `OPENAI_API_KEY` is required for scoring news; override `LLM_MODEL` if needed (e.g., `gpt-4o-mini`).
-4) Apply database schemas (first run only).
-```bash
-psql -h "$PGHOST" -p "$PGPORT" -d "$PGDATABASE" -U "$PGUSER" -f sql/create_company_tickers.sql
-psql -h "$PGHOST" -p "$PGPORT" -d "$PGDATABASE" -U "$PGUSER" -f sql/create_recent_filings.sql
-psql -h "$PGHOST" -p "$PGPORT" -d "$PGDATABASE" -U "$PGUSER" -f sql/create_gdelt_gkg_records.sql
-psql -h "$PGHOST" -p "$PGPORT" -d "$PGDATABASE" -U "$PGUSER" -f sql/create_gdelt_gkg_company_links.sql
-psql -h "$PGHOST" -p "$PGPORT" -d "$PGDATABASE" -U "$PGUSER" -f sql/create_filing_experiments.sql
-psql -h "$PGHOST" -p "$PGPORT" -d "$PGDATABASE" -U "$PGUSER" -f sql/create_gdelt_article_scores.sql
-```
-
-### How it Works (main commands)
-
-Run the scripts below in order to populate and evaluate the dataset. CLI options from `JPN_README.md` remain available for customization.
+Run the scripts below (e.g., inside the batch container at `/app/src`) to populate and evaluate the dataset. CLI options from `JPN_README.md` remain available for customization.
 
 1) Sync company tickers.
 ```bash
@@ -119,19 +127,8 @@ Tip: use `config/predict_config.example.json` as a template and pass `--config` 
 
 The demo UI shows filing predictions and news scores backed by the batch outputs.
 
-### Backend
-```bash
-cd demo/backend
-uvicorn main:app --reload --port 5000
-```
-
-### Frontend
-```bash
-cd demo/frontend
-pnpm install
-pnpm dev
-```
-
-Once both services are running, open the frontend URL shown by `pnpm dev` to interact with the demo.
+Run with Docker (see Docker quickstart):
+- Backend: http://localhost:8000/docs
+- Frontend: http://localhost:3000
 
 ---

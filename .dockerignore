@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+**/node_modules
+**/.next
+**/.turbo
+**/dist
+**/build
+**/.DS_Store
+.dockerignore
