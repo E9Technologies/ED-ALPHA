@@ -65,7 +65,7 @@ docker compose run --rm batch python src/fetch_recent_filings.py
 
 ## Batch Pipeline
 
-Run the scripts below (e.g., inside the batch container at `/app/src`) to populate and evaluate the dataset. CLI options from `JPN_README.md` remain available for customization.
+Run the scripts below (e.g., inside the batch container at `/app/src`) to populate and evaluate the dataset. 
 
 1) Sync company tickers.
 ```bash
@@ -131,7 +131,19 @@ Run with Docker (see Docker quickstart):
 - Backend: http://localhost:8000/docs
 - Frontend: http://localhost:3000
 
----
+## Customization tips (for model and pipeline experiments)
+
+- Model choice: `batch/src/score_gdelt_news.py` accepts `--model`, so you can switch among models available via OpenRouter.
+- Prompt tuning: the LLM prompt for news scoring lives in `batch/src/llm_methods.py` (`_build_prompt_messages`). Edit the system/user messages (categories, instructions, output format) to adapt to new models or research goals.
+- Label configs: `generate_labels.py` pairs predictions with filing Item codes. Adjust `--item-codes`, `--horizon-days`, and `--predict-date`, or place a JSON config (see `batch/config/predict_config.example.json`) and pass `--config`.
+- Scoring window: tune `--min-days-before` / `--max-days-before` in `score_gdelt_news.py` to shift how far back news is considered per filing.
+- Negative sampling / seeds: `filing_experiments` store `neg_multiplier` and `seed`—edit generation parameters in `generate_labels.py` to reproduce or vary experiments.
+- Metrics: `calc_gdelt_run_metrics.py` supports arbitrary `--k-values` to evaluate recall/precision@k; adjust to match your ranking focus.
+
+## Licensing
+
+- SEC EDGAR (8-K filings and related data): subject to SEC Terms of Use; see https://www.sec.gov/privacy.htm and https://www.sec.gov/os/accessing-edgar-data.
+- GDELT data: provided under GDELT’s open data license; see https://www.gdeltproject.org/about.html#termsusage.
 
 # Appendix
 
