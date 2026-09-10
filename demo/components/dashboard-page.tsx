@@ -286,7 +286,12 @@ export function DashboardPage({ autoOpenTutorial = true, forceExpandFirstEvidenc
               onRunChange={handleRunChange}
             />
 
-            {selectedExperiment && <ExperimentCard experiment={selectedExperiment} />}
+            {selectedExperiment && (
+              <ExperimentCard
+                experiment={selectedExperiment}
+                displayNumber={experiments.indexOf(selectedExperiment) + 1}
+              />
+            )}
 
             {isLoadingMetrics ? (
               <LoadingState />

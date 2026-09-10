@@ -45,9 +45,9 @@ export function ControlBar({
               <SelectValue placeholder="Select Experiment" />
             </SelectTrigger>
             <SelectContent>
-              {experiments.map((exp) => (
+              {experiments.map((exp, index) => (
                 <SelectItem key={exp.id} value={exp.id.toString()}>
-                  Experiment {exp.id}
+                  Experiment {index + 1}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -70,9 +70,9 @@ export function ControlBar({
               <SelectValue placeholder="Select Run" />
             </SelectTrigger>
             <SelectContent>
-              {selectedExperiment?.runs.map((run) => (
+              {selectedExperiment?.runs.map((run, index) => (
                 <SelectItem key={run.id} value={run.id.toString()}>
-                  {run.model_label} · Run {run.id}
+                  {run.model_label} · Run {index + 1}
                 </SelectItem>
               ))}
             </SelectContent>

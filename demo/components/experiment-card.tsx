@@ -5,14 +5,15 @@ import type { Experiment } from "@/types/api"
 
 interface ExperimentCardProps {
   experiment: Experiment
+  displayNumber: number
 }
 
-export function ExperimentCard({ experiment }: ExperimentCardProps) {
+export function ExperimentCard({ experiment, displayNumber }: ExperimentCardProps) {
   return (
     <Card className="metric-card shadow-lg border-border" data-tour-id="experiment-config">
       <CardHeader className="border-b border-border/50">
         <CardTitle className="text-xl font-bold">
-          Experiment ID: <span className="gold-accent">{experiment.id}</span>
+          Experiment <span className="gold-accent">{displayNumber}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
