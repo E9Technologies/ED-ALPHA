@@ -105,13 +105,9 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Rank</th>
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Company</th>
-                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Avg. score</th>
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">News Signals</th>
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Outcome</th>
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Event</th>
-                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Link</th>
+                <th className="text-left py-3 px-2 font-medium text-muted-foreground">Rank / Company</th>
+                <th className="text-left py-3 px-2 font-medium text-muted-foreground">News Signals</th>
+                <th className="text-left py-3 px-2 font-medium text-muted-foreground">Outcome</th>
               </tr>
             </thead>
             <tbody>
@@ -129,36 +125,40 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
                     className="border-b border-border hover:bg-secondary/50"
                     data-tour-id={isFirstRow ? "top-k-first-row" : undefined}
                   >
-                    <td className="py-3 px-4 font-mono font-semibold">#{rowIndex + 1}</td>
-                    <td className="py-3 px-4">
-                      <div className="max-w-[15rem] space-y-1">
-                        <div className="font-medium leading-snug text-foreground">{row.company_name || "N/A"}</div>
+                    <td className="py-3 px-2 align-top w-[10rem]">
+                      <div className="space-y-2">
+                        <div className="flex items-baseline gap-2">
+                          <span className="font-mono font-semibold">#{rowIndex + 1}</span>
+                          <div className="font-medium leading-snug text-foreground">{row.company_name || "N/A"}</div>
+                        </div>
                         <div
                           className="font-mono text-[0.72rem] leading-none text-muted-foreground"
                           title="SEC Central Index Key"
                         >
-                          {row.cik}
+                          CIK {row.cik}
+                        </div>
+                        <div className="text-xs" title={`Mean of ${row.article_count} article scores; rankings use unrounded values`}>
+                          <span className="text-muted-foreground">Avg. score </span>
+                          <span className="font-mono font-semibold">{row.article_count ? row.average_score.toFixed(3) : "N/A"}</span>
+                          <div className="mt-1 text-muted-foreground">{row.article_count} {row.article_count === 1 ? "article" : "articles"}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-semibold" title={`Mean of ${row.article_count} article scores; rankings use unrounded values`}>
-                      {row.article_count ? row.average_score.toFixed(3) : "No articles"}
-                    </td>
-                    <td className="py-3 px-4" data-tour-id={isFirstRow ? "top-k-evidence" : undefined}>
+                    <td className="py-3 px-2 align-top min-w-[15rem]" data-tour-id={isFirstRow ? "top-k-evidence" : undefined}>
                       {firstEvidence ? (
                         <div className="space-y-2">
                           <div className="flex items-start gap-2">
                             <div className="flex-1">
-                              <p className="text-xs text-muted-foreground line-clamp-2">{firstEvidence.summary}</p>
                               <a
                                 href={firstEvidence.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-primary hover:underline inline-flex items-center gap-1 mt-1"
+                                className="text-sm font-medium text-primary hover:underline inline-flex items-center gap-1"
                               >
                                 {firstEvidence.title}
-                                <ExternalLink className="w-3 h-3" />
+                                <ExternalLink className="w-3 h-3 shrink-0" />
                               </a>
+                              <p className="mt-1 text-xs text-muted-foreground line-clamp-3">{firstEvidence.summary}</p>
                             </div>
                           </div>
                           {hasMoreEvidence && (
@@ -207,64 +207,56 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
                         <span className="text-muted-foreground">N/A</span>
                       )}
                     </td>
-                    <td className="py-3 px-4">
-                      {isHit ? (
-                        <Badge
-                          variant="outline"
-                          className="border-emerald-200 bg-emerald-50 text-emerald-700"
-                          title="Hit: the ranked company matched a tracked 8-K event in the evaluation window."
-                        >
-                          <CheckCircle2 className="text-emerald-600" />
-                          Hit
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="border-rose-200 bg-rose-50 text-rose-700"
-                          title="Miss: no tracked 8-K event was found for this ranked company in the evaluation window."
-                        >
-                          <XCircle className="text-rose-600" />
-                          Miss
-                        </Badge>
-                      )}
-                    </td>
-                    <td className="py-3 px-4" data-tour-id={isFirstRow ? "top-k-event" : undefined}>
-                      {row.event ? (
-                        <div className="text-xs space-y-1">
-                          <div className="font-mono">{row.event.form}</div>
-                          {eventItems.length > 0 && (
-                            <ul className="space-y-1 text-muted-foreground">
-                              {eventItems.map((item, idx) => (
-                                <li key={idx} className="flex gap-2">
-                                  <span className="font-mono text-[0.65rem] text-muted-foreground/80">*</span>
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                          {row.event.filing_date && (
-                            <div className="text-muted-foreground">
-                              {new Date(row.event.filing_date).toLocaleDateString("en-US")}
+                    <td className="py-3 px-2 align-top w-[9rem]" data-tour-id={isFirstRow ? "top-k-event" : undefined}>
+                      <div className="space-y-2">
+                        {isHit ? (
+                          <Badge
+                            variant="outline"
+                            className="border-emerald-200 bg-emerald-50 text-emerald-700"
+                            title="Hit: the ranked company matched a tracked 8-K event in the evaluation window."
+                          >
+                            <CheckCircle2 className="text-emerald-600" />
+                            Hit
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="border-rose-200 bg-rose-50 text-rose-700"
+                            title="Miss: no tracked 8-K event was found for this ranked company in the evaluation window."
+                          >
+                            <XCircle className="text-rose-600" />
+                            Miss
+                          </Badge>
+                        )}
+                        {row.event ? (
+                          <div className="text-xs space-y-1">
+                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                              <span className="font-mono">{row.event.form}</span>
+                              {eventItems.length > 0 && (
+                                <span className="text-muted-foreground">Item {eventItems.join(", ")}</span>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">N/A</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4">
-                      {row.event?.url ? (
-                        <a
-                          href={row.event.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary hover:underline inline-flex items-center gap-1"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      ) : (
-                        <span className="text-muted-foreground">N/A</span>
-                      )}
+                            {row.event.filing_date && (
+                              <div className="text-muted-foreground">
+                                {new Date(row.event.filing_date).toLocaleDateString("en-US")}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">No tracked filing</span>
+                        )}
+                        {row.event?.url ? (
+                          <a
+                            href={row.event.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+                          >
+                            View SEC filing
+                            <ExternalLink className="w-3 h-3 shrink-0" />
+                          </a>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 )
