@@ -1,3 +1,9 @@
+export type RunSummary = {
+  id: number
+  model_name: string
+  model_label: string
+}
+
 export type Experiment = {
   id: number
   predict_date: string | Date
@@ -7,6 +13,7 @@ export type Experiment = {
   seed: number
   created_at: string | Date
   run_ids: number[]
+  runs: RunSummary[]
 }
 
 export type RunMetric = {
@@ -42,7 +49,10 @@ export type EventInfo = {
 export type ResultRow = {
   cik: number
   company_name?: string | null
-  total_score: number
+  label: 0 | 1
+  average_score: number
+  article_count: number
+  score_sum: number
   evidence: Evidence[]
   event?: EventInfo | null
 }
@@ -50,6 +60,9 @@ export type ResultRow = {
 export type ResultsResponse = {
   experiment_id: number
   run_id: number
+  model_name: string
+  model_label: string
+  aggregation: "mean_article_score"
   k: number
   results: ResultRow[]
 }

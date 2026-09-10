@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import type { RunMetric } from "@/types/api"
 import {
   Chart as ChartJS,
@@ -285,8 +286,17 @@ export function MetricsChart({ metrics, selectedK, onKSelect }: MetricsChartProp
         <CardTitle className="text-xl">Metrics (Recall@K / Precision@K / F1@K / TP@K )</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-row items-start gap-4">
-          <div className="min-w-0 flex-1">
+        <div className="mb-4 flex items-center gap-2" role="group" aria-label="Select K">
+          <span className="mr-1 text-sm font-medium">Top-K</span>
+          {sortedMetrics.map((metric) => (
+            <Button key={metric.k} size="sm" variant={metric.k === selectedK ? "default" : "outline"}
+              aria-pressed={metric.k === selectedK} onClick={() => onKSelect(metric.k)}>
+              K={metric.k}
+            </Button>
+          ))}
+        </div>
+        <div className="flex flex-col items-start gap-4 sm:flex-row">
+          <div className="w-full min-w-0 flex-1">
             <div className="h-[420px] w-full">
               <Scatter data={data} options={options} plugins={[f1ContourPlugin]} />
             </div>
@@ -319,7 +329,7 @@ export function MetricsChart({ metrics, selectedK, onKSelect }: MetricsChartProp
           </div>
         </div>
         <p className="mt-4 text-center text-sm text-muted-foreground">
-          Click on the chart to select K value (Current: K={selectedK})
+          Select K above or click a point on the chart (Current: K={selectedK})
         </p>
       </CardContent>
     </Card>

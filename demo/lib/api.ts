@@ -1,19 +1,18 @@
 import snapshot from "@/data/demo-data.json"
-import type { Experiment, ResultRow, ResultsResponse, RunMetric } from "@/types/api"
+import type { Experiment, ResultRow, ResultsResponse, RunMetric, RunSummary } from "@/types/api"
 
 type FetchOptions = {
   signal?: AbortSignal
   query?: Record<string, string | number | boolean | undefined | null>
 }
 
-type SnapshotRun = {
-  id: number
+type SnapshotRun = RunSummary & {
   metrics: RunMetric[]
   topResults: ResultRow[]
 }
 
 type SnapshotShape = {
-  experiment: Experiment
+  experiment: Omit<Experiment, "runs">
   runs: SnapshotRun[]
 }
 
@@ -37,7 +36,10 @@ function getRun(runId: number): SnapshotRun {
 
 export async function listExperiments(options?: FetchOptions): Promise<Experiment[]> {
   assertNotAborted(options?.signal)
-  return [cloneJson(data.experiment)]
+  return [{
+    ...cloneJson(data.experiment),
+    runs: data.runs.map(({ id, model_name, model_label }) => ({ id, model_name, model_label })),
+  }]
 }
 
 export async function getRunMetrics(runId: number, options?: FetchOptions): Promise<RunMetric[]> {
@@ -82,6 +84,9 @@ export async function getExperimentResults(
   return {
     experiment_id: experimentId,
     run_id: runId,
+    model_name: run.model_name,
+    model_label: run.model_label,
+    aggregation: "mean_article_score",
     k: normalizedK,
     results,
   }

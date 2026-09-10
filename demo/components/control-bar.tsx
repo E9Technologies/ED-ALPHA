@@ -56,7 +56,7 @@ export function ControlBar({
 
         <div className="w-fit max-w-full space-y-2" data-tour-id="run-selector">
           <Label htmlFor="run-select" className="text-sm font-semibold text-foreground">
-            Run
+            Model / Run
           </Label>
           <Select
             value={selectedRunId?.toString()}
@@ -70,15 +70,18 @@ export function ControlBar({
               <SelectValue placeholder="Select Run" />
             </SelectTrigger>
             <SelectContent>
-              {selectedExperiment?.run_ids.map((runId) => (
-                <SelectItem key={runId} value={runId.toString()}>
-                  Run {runId}
+              {selectedExperiment?.runs.map((run) => (
+                <SelectItem key={run.id} value={run.id.toString()}>
+                  {run.model_label} · Run {run.id}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
       </div>
+      <p className="mt-4 text-sm text-muted-foreground">
+        Paper baselines · Company score = average of article scores (1–5).
+      </p>
     </div>
   )
 }

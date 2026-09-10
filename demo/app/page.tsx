@@ -67,7 +67,7 @@ export default function Page() {
                 <span className="size-2.5 rounded-full bg-amber-300 sm:size-3" />
                 <span className="size-2.5 rounded-full bg-emerald-400 sm:size-3" />
               </div>
-              <span className="text-xs font-semibold text-white/60">ED-Alpha walkthrough</span>
+              <span className="text-xs font-semibold text-white/60">Earlier walkthrough · Sum scoring</span>
             </div>
             <video
               className="block aspect-video w-full bg-slate-950"
@@ -80,6 +80,12 @@ export default function Page() {
               Your browser does not support the video tag.
             </video>
           </div>
+          <p className="px-5 pt-3 text-sm text-muted-foreground sm:px-0">
+            This recording uses earlier sum-based scores.{" "}
+            <Link href="/tutorial" className="font-medium text-primary underline underline-offset-4">
+              Explore the paper’s averaged results in the interactive tutorial.
+            </Link>
+          </p>
         </div>
       </section>
 

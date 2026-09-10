@@ -85,7 +85,10 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
   return (
     <Card data-tour-id="top-k-table">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl">Top-{results.k} Companies</CardTitle>
+        <div>
+          <CardTitle className="text-xl">Top-{results.k} Companies</CardTitle>
+          <p className="mt-1 text-sm text-muted-foreground">{results.model_label} · Ranked by average article score</p>
+        </div>
         <Button
           variant="outline"
           size="sm"
@@ -104,7 +107,7 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
               <tr className="border-b border-border">
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Rank</th>
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Company</th>
-                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Score</th>
+                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Avg. score</th>
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">News Signals</th>
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Outcome</th>
                 <th className="text-left py-3 px-4 font-medium text-muted-foreground">Event</th>
@@ -118,7 +121,7 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
                 const hasMoreEvidence = row.evidence.length > 1
                 const eventItems = normalizeEventItems(row.event?.items)
                 const isFirstRow = rowIndex === 0
-                const isHit = Boolean(row.event)
+                const isHit = row.label === 1
 
                 return (
                   <tr
@@ -138,7 +141,9 @@ export function ResultsTable({ results, experiment, expandFirstEvidence = false 
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-right font-mono font-semibold">{Math.round(row.total_score)}</td>
+                    <td className="py-3 px-4 text-right font-mono font-semibold" title={`Mean of ${row.article_count} article scores; rankings use unrounded values`}>
+                      {row.article_count ? row.average_score.toFixed(3) : "No articles"}
+                    </td>
                     <td className="py-3 px-4" data-tour-id={isFirstRow ? "top-k-evidence" : undefined}>
                       {firstEvidence ? (
                         <div className="space-y-2">

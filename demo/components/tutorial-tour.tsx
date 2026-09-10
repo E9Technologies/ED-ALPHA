@@ -46,7 +46,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     title: "Select a run",
     description: [
       "A run is one model or scoring execution inside the selected experiment. It contains that method's scores, Top-K ranking, news signals, and evaluation metrics.",
-      "Use runs to compare different models, prompts, seeds, or scoring rules under the same fixed benchmark setup.",
+      "These three runs reproduce the paper's baselines. Each company is ranked by the average of its article scores, using the same fixed benchmark setup.",
     ],
   },
   {
@@ -63,7 +63,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     title: "Compare ranking quality",
     description: [
       "The chart plots Precision@K and Recall@K, with F1 contours showing the balance between the two.",
-      "Clicking a point changes the active K and refreshes the company ranking below.",
+      "Select K=5, 25 or 50 using the buttons or chart points to refresh the company ranking below.",
     ],
   },
   {
@@ -72,7 +72,7 @@ const TUTORIAL_STEPS: TutorialStep[] = [
     title: "Audit the Top-K ranking",
     description: [
       "Start with the first row: it is the model's highest-ranked prediction for the selected K.",
-      "Use Score to inspect the model-assigned event-prediction score, News Signals to review the model-side news signal, Outcome to see Hit or Miss, and Event to confirm the matched Form 8-K filing.",
+      "Avg. score is the mean article score for the company. News Signals shows its article evidence, Outcome shows the benchmark label, and Event links to the tracked Form 8-K filing behind a hit.",
     ],
   },
 ]
