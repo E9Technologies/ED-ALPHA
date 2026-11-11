@@ -9,6 +9,7 @@
 <p align="center">
   <a href="https://e9technologies.github.io/ED-ALPHA/"><img src="https://img.shields.io/badge/Demo-Website-2f4858?style=flat-square&logo=githubpages&logoColor=white" alt="Demo website" /></a>
   <a href="https://e9technologies.github.io/ED-ALPHA/tutorial/"><img src="https://img.shields.io/badge/Demo-Tutorial-0b6bcb?style=flat-square&logo=readthedocs&logoColor=white" alt="Tutorial" /></a>
+  <a href="https://doi.org/10.1145/3799682.3840245"><img src="https://img.shields.io/badge/Paper-CIKM%20%2726-b31b1b?style=flat-square&logo=acm&logoColor=white" alt="CIKM '26 paper" /></a>
 </p>
 
 ## What is ED-Alpha?
@@ -155,3 +156,26 @@ Tip: use `config/predict_config.example.json` as a template and pass `--config` 
 - [Data model and pipeline flow](docs/data-model-and-flow.md)
 - [How to evaluate your model](docs/how-to-evaluate-your-model.md)
 - [Static demo and GitHub Pages setup](demo/README.md)
+
+## Citation
+
+ED-Alpha is described in our CIKM 2026 demo paper, [Ed-Alpha: An Open Benchmark for Predicting Investment-Relevant Corporate Events from Open Data](https://doi.org/10.1145/3799682.3840245). If you use ED-Alpha in your research, please cite:
+
+```bibtex
+@inproceedings{10.1145/3799682.3840245,
+author = {Bundo, Shuya and Kawashima, Yuki and Joko, Hideaki and Shimano, Takuya},
+title = {Ed-Alpha: An Open Benchmark for Predicting Investment-Relevant Corporate Events from Open Data},
+year = {2026},
+isbn = {9798400725395},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3799682.3840245},
+doi = {10.1145/3799682.3840245},
+booktitle = {Proceedings of the 35th ACM International Conference on Information and Knowledge Management},
+pages = {9077–9081},
+numpages = {5},
+keywords = {event-driven investing, corporate event prediction, benchmarking},
+location = {Rome, Italy},
+series = {CIKM '26}
+}
+```
